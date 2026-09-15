@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Системное предупреждение</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background-color: #000;
+            color: #0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        #hacker-screen {
+            width: 90%;
+            max-width: 500px;
+            padding: 20px;
+            border: 1px solid #0f0;
+            box-shadow: 0 0 15px #0f0;
+        }
+
+        .loader-bar {
+            width: 100%;
+            height: 20px;
+            border: 1px solid #0f0;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .loader-fill {
+            height: 100%;
+            width: 0%;
+            background-color: #0f0;
+            transition: width 0.1s;
+        }
+
+        .btn {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 15px;
+            display: none;
+            text-transform: uppercase;
+            border-radius: 5px;
+        }
+
+        #quest-screen {
+            display: none;
+            width: 90%;
+            max-width: 600px;
+            background: #111;
+            padding: 25px;
+            border-radius: 10px;
+            border: 2px solid #ff0055;
+            color: #fff;
+        }
+
+        .puzzle-box {
+            background: #222;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            font-size: 14px;
+            line-height: 1.5;
+            text-align: left;
+            word-wrap: break-word;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+        }
+
+        #prank-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #ff0055;
+            z-index: 9999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            animation: flash 0.12s infinite alternate;
+        }
+
+        @keyframes flash {
+            0% { background: #ff0055; }
+            100% { background: #00e5ff; }
+        }
+
+        .meme-img {
+            max-width: 80%;
+            max-height: 40vh;
+            border-radius: 15px;
+            box-shadow: 0 0 30px #fff;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            text-shadow: 2px 2px #000;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            padding: 0 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. ВЗЛОМ -->
+    <div id="hacker-screen">
+        <h2 style="color: red;">⚠️ КРИТИЧЕСКАЯ ОШИБКА СИСТЕМЫ</h2>
+        <p style="margin-top: 10px;">Обнаружена несанкционированная загрузка данных...</p>
+        <div class="loader-bar">
+            <div class="loader-fill" id="progress"></div>
+        </div>
+        <p id="status-text">Сканирование файловой системы...</p>
+        <button class="btn" id="fix-btn" onclick="startQuest()">Остановить взлом</button>
+    </div>
+
+    <!-- 2. ЗАГАДКА -->
+    <div id="quest-screen">
+        <h2 style="color: #ff0055;">🔒 ТЕСТ НА ВЕРИФИКАЦИЮ ЛИЧНОСТИ</h2>
+        <p style="margin-top: 10px; font-size: 0.9rem; color: #aaa;">Введи дешифрованный код доступа:</p>
+        
+        <div class="puzzle-box">
+            <strong>ШИФРОВКА:</strong><br><br>
+            В 18 лет каждый ищет Х. <br>
+            Х = (Количество месяцев в году * 2) - 6.<br>
+            Найди последовательность:<br>
+            <code>01010000 01000001 01010011 01001000 01000001</code>
+        </div>
+
+        <input type="text" id="answer-input" placeholder="Введите ответ...">
+        <br>
+        <button class="btn" style="display:inline-block;" onclick="triggerPrank()">Проверить код</button>
+    </div>
+
+    <!-- 3. СКРИМЕР -->
+    <div id="prank-screen">
+        <img src="https://media.giphy.com/media/l1J9sBCGZ483DOGM8/giphy.gif" alt="PARTY MEME" class="meme-img">
+        <h1>ПАША, С 18-ЛЕТИЕМ! 🎉🎂</h1>
+        <p>Ты попался! Никакого взлома нет, с совершеннолетием тебя, бро! 🥳🚀</p>
+    </div>
+
+    <script>
+        let progress = 0;
+        const progressBar = document.getElementById('progress');
+        const statusText = document.getElementById('status-text');
+        const fixBtn = document.getElementById('fix-btn');
+        let prankTriggered = false;
+        let audioCtx;
+
+        // Эмулятор загрузки
+        const interval = setInterval(() => {
+            progress += Math.floor(Math.random() * 15) + 5;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                statusText.innerText = "Угроза критическая! Нажмите для отмены!";
+                statusText.style.color = "red";
+                fixBtn.style.display = "inline-block";
+            }
+            progressBar.style.width = progress + '%';
+        }, 300);
+
+        // Инициализация звука строго при ПЕРВОМ клике пользователя
+        function initAudio() {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) {
+                audioCtx = new AudioContext();
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+            }
+        }
+
+        function startQuest() {
+            initAudio(); // Браузер даёт разрешение на звук
+
+            document.getElementById('hacker-screen').style.display = 'none';
+            document.getElementById('quest-screen').style.display = 'block';
+            
+            // Таймер пранка через 5 секунд
+            setTimeout(() => {
+                triggerPrank();
+            }, 5000);
+        }
+
+        // Генератор громкого сиреноподобного звука через Web Audio API
+        function playSiren() {
+            if (!audioCtx) return;
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sawtooth'; // Агрессивная форма волны
+            osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+            
+            // Модуляция частоты (звук сирены/тревоги)
+            osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.3);
+            osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.6);
+            osc.frequency.exponentialRampToValueAtTime(1500, audioCtx.currentTime + 1.0);
+
+            // Громкость на максимум
+            gain.gain.setValueAtTime(1.0, audioCtx.currentTime);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 2.5); // Длительность звука 2.5 сек
+        }
+
+        function triggerPrank() {
+            if (prankTriggered) return;
+            prankTriggered = true;
+
+            document.getElementById('quest-screen').style.display = 'none';
+            document.getElementById('prank-screen').style.display = 'flex';
+
+            if (audioCtx) {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                playSiren(); // Запуск синтезированного звука
+            }
+        }
+    </script>
+</body>
+</html>
